@@ -7,6 +7,7 @@
 # 36126645
 
 import socket
+from Profile import Profile
 
 def send(server:str, port:int, username:str, password:str, message:str, bio:str=None):
   '''
@@ -19,9 +20,14 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
   :param message: The message to be sent to the server.
   :param bio: Optional, a bio for the user.
   '''
-  
+  profile = Profile(username, password, bio)
+  profile.save_profile()
 
-  return 
+  send, recv = connect(server,port)
+  send.write(message + "\r\n")
+  send.flush()
+  
+  return "Message has been sent"
 
 def connect(server:str, port:str):
   with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
@@ -29,5 +35,5 @@ def connect(server:str, port:str):
     send = client.makefile('r')
     recv = client.makefile('w')
     print(f"client connected to {server} on {port}")
-
+    return send, recv
 
