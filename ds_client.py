@@ -46,6 +46,9 @@ def send(server:str, port:str, username:str, password:str, message:str, bio:str=
        client.send(post_msg.encode('utf-8'))
        response = client.recv(1024).decode()
        print(response)
+    else:
+       print(response_json['response']['message'])
+    client.close()
     return True
   except Exception as e:
       print("Error:", e)
