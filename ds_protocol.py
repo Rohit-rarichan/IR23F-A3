@@ -35,6 +35,13 @@ def join(username:str, password: str):
     join_msg = {"join":{"username": username, "password": password, "token": ''}}
     return json.dumps(join_msg)
 
+def post(message:str, user_token:str, timestamp:str ):
+   post_msg = {"token": user_token, "post":{"entry":message, "timestamp": timestamp}}  #or use time.time()
+   return json.dumps(post_msg)
+
+def bio_send(bio:str, user_token:str, timestamp:str):
+   bio_msg = {"token": user_token, "post":{"entry":bio, "timestamp": timestamp}}
+   return json.dumps(bio_msg)
 
 
 
