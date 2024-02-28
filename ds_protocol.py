@@ -11,6 +11,7 @@
 import json
 from collections import namedtuple
 
+
 # Namedtuple to hold the values retrieved from json messages.
 # TODO: update this named tuple to use DSP protocol keys
 DataTuple = namedtuple('DataTuple', ['foo','baz'])
@@ -29,3 +30,12 @@ def extract_json(json_msg:str) -> DataTuple:
     print("Json cannot be decoded.")
 
   return DataTuple(foo, baz)
+
+def join(username:str, password: str):
+    join_msg = {"join":{"username": username, "password": password, "token": ''}}
+    return json.dumps(join_msg)
+
+
+
+
+   

@@ -7,9 +7,11 @@
 # 36126645
 
 import socket
-from Profile import Profile
 
-def send(server:str, port:int, username:str, password:str, message:str, bio:str=None):
+import json
+from ds_protocol import join
+
+def send(server:str, port:str, username:str, password:str, message:str, bio:str=None):
   '''
   The send function joins a ds server and sends a message, bio, or both
 
@@ -20,20 +22,23 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
   :param message: The message to be sent to the server.
   :param bio: Optional, a bio for the user.
   '''
-  profile = Profile(username, password, bio)
-  profile.save_profile()
 
-  send, recv = connect(server,port)
-  send.write(message + "\r\n")
-  send.flush()
-  
-  return "Message has been sent"
+  '''profile = Profile(username, password, bio)
+  profile.save_profile(server)'''
+  try:
 
-def connect(server:str, port:str):
-  with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
-    client.connect((server,port))
-    send = client.makefile('r')
-    recv = client.makefile('w')
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+    client.connect((server,int(port)))
+
     print(f"client connected to {server} on {port}")
-    return send, recv
+    join_msg = join(username, password)
+    client.send(join_msg.encode('utf-8'))
 
+    resp = client.recv(1024).decode()
+    print(resp)
+    response_json = json.loads(resp)
+    print(response_json)
+    return True
+  except Exception as e:
+      print("Error:", e)
+      return False

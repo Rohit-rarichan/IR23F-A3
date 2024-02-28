@@ -23,6 +23,5 @@ def main():
         send(srv_ip, srv_port, username, password, message, bio)
         ans = input("Would you like to continue Y/N : ")
 
-
 if __name__ == "__main__":
     main()
