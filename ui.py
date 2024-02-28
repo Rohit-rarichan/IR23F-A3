@@ -9,22 +9,22 @@
 # 36126645
 from pathlib import Path
 from Profile import Profile
-
+from ds_client import send
 
 def create_journal(filepath:str):   #creating the journal and adding the inputs
     username = input("Enter the username : ")
     password = input("Enter the password : ")
     bio = input("Enter a few lines of bio data : ")
-    
+    srv_ip = input("Enter the server IP address : ")
     if Path(filepath).exists():
         print("File exists and will now be opened")
         open_journal(filepath)
     else:
         file_name = Path(filepath).open('w')
-    profile = Profile(username, password)
+    profile = Profile(srv_ip, username, password)
     profile.save_profile(filepath)
     file_name.close()
-    return username, password, bio
+    return username, password, bio, srv_ip
 
 
 def read_file(myPath):        #reading the contents of a file 
@@ -104,7 +104,7 @@ def user_interface():   #interface for users who want it
             
             if command == 'C':   #create command 
                 create_path = input("Amazing!, What is the name of the file you want to create ")
-                username, password, bio = create_journal(create_path)
+                username, password, bio, srv_ip = create_journal(create_path)
             elif command == 'O':  #open command
                 open_path = input("Cool!, Which file would you like to open ")
                 profile = open_journal(open_path)
@@ -127,6 +127,10 @@ def user_interface():   #interface for users who want it
             elif command == "Q":   #to quit the program
                 print("Hope you have completed what you wanted to, Bye!")
                 break 
+            elif command =="PO":
+                message = input("Enter the message that you would like to send the server : ")
+                srv_port = "3021"
+                send(srv_ip, srv_port, username, password, message, bio)
             else:  #if command inputed was incorrect
                 print("Incorrect command, Please type again")
         except TypeError:  #if the type entered was not string
