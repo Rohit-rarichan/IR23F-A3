@@ -7,9 +7,9 @@
 # 36126645
 
 import socket
-
+import time
 import json
-from ds_protocol import join
+from ds_protocol import join,post, bio_send
 
 def send(server:str, port:str, username:str, password:str, message:str, bio:str=None):
   '''
@@ -26,7 +26,7 @@ def send(server:str, port:str, username:str, password:str, message:str, bio:str=
   '''profile = Profile(username, password, bio)
   profile.save_profile(server)'''
   try:
-
+    timestamp = get_timestamp()
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
     client.connect((server,int(port)))
 
@@ -38,7 +38,17 @@ def send(server:str, port:str, username:str, password:str, message:str, bio:str=
     print(resp)
     response_json = json.loads(resp)
     print(response_json)
+    if response_json['response']['type'] == 'ok':
+       token = response_json['response']['token']
+       bio_msg = bio_send(bio, token, timestamp)
+       client.send(bio_msg.encode('utf-8'))
+       post_msg = post(message, token, timestamp)
+       client.send(post_msg.encode('utf-8'))
+       response = client.recv(1024).decode()
+       print(response)
     return True
   except Exception as e:
       print("Error:", e)
       return False
+def get_timestamp():
+   return str(time.time())
