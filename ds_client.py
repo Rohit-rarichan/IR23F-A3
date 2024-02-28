@@ -9,7 +9,7 @@
 import socket
 import time
 import json
-from ds_protocol import join,post, bio_send
+from ds_protocol import join, post, bio_send
 
 def send(server:str, port:str, username:str, password:str, message:str, bio:str=None):
   '''
