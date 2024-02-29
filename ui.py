@@ -94,6 +94,13 @@ def print_journal(profile, option):  #printing the contents of the journal that 
         for i, post in enumerate(profile.posts):
             print(f"ID: {i+1}, Content: {post}")
 
+def online_posting(message, port):
+    username = input("Enter the username : ")
+    password = input("Enter the password : ")
+    bio = input("Enter a few lines of bio data : ")
+    srv_ip = input("Enter the server IP address : ")
+    send(srv_ip, port, username, password, message, bio)
+
 def user_interface():   #interface for users who want it 
     while True:
         try:
@@ -130,7 +137,7 @@ def user_interface():   #interface for users who want it
             elif command =="PO":
                 message = input("Enter the message that you would like to send the server : ")
                 srv_port = "3021"
-                send(srv_ip, srv_port, username, password, message, bio)
+                online_posting(message, srv_port)
             else:  #if command inputed was incorrect
                 print("Incorrect command, Please type again")
         except TypeError:  #if the type entered was not string

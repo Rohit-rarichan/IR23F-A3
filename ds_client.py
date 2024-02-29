@@ -35,17 +35,17 @@ def send(server:str, port:str, username:str, password:str, message:str, bio:str=
     client.send(join_msg.encode('utf-8'))
 
     resp = client.recv(1024).decode()
-    print(resp)
     response_json = json.loads(resp)
-    print(response_json)
     if response_json['response']['type'] == 'ok':
        token = response_json['response']['token']
        bio_msg = bio_send(bio, token, timestamp)
        client.send(bio_msg.encode('utf-8'))
+       response1 = client.recv(1024).decode()
+       print(response1)
        post_msg = post(message, token, timestamp)
        client.send(post_msg.encode('utf-8'))
-       response = client.recv(1024).decode()
-       print(response)
+       response2 = client.recv(1024).decode()
+       print(response2)
     else:
        print(response_json['response']['message'])
     client.close()
