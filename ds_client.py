@@ -37,21 +37,27 @@ def send(server:str, port:str, username:str, password:str, message:str, bio:str=
     resp = client.recv(1024).decode()
     response_json = json.loads(resp)
     if response_json['response']['type'] == 'ok':
-       token = response_json['response']['token']
-       bio_msg = bio_send(bio, token, timestamp)
-       client.send(bio_msg.encode('utf-8'))
-       response1 = client.recv(1024).decode()
-       print(response1)
-       post_msg = post(message, token, timestamp)
-       client.send(post_msg.encode('utf-8'))
-       response2 = client.recv(1024).decode()
-       print(response2)
+      token = response_json['response']['token']
+      if bio:
+        bio_msg = bio_send(bio, token, timestamp)
+        client.send(bio_msg.encode('utf-8'))
+        response1 = client.recv(1024).decode()
+        print(response1)
+
+      post_msg = post(message, token, timestamp)
+      client.send(post_msg.encode('utf-8'))
+      response2 = client.recv(1024).decode()
+      print(response2)
+      client.close()
+      return True
+
     elif response_json['response']['type'] == 'error':
-       print(f"Error from server : {response_json['response']['message']}")
+      print(f"Error from server : {response_json['response']['message']}")
+      return False
     else:
-       print("Response from server is an unknown error")
-    client.close()
-    return True
+      print("Response from server is an unknown error")
+      return False
+    
   except Exception as e:
     print("Unexpected Error:", e)
     return False
