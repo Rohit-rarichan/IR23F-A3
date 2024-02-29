@@ -46,12 +46,14 @@ def send(server:str, port:str, username:str, password:str, message:str, bio:str=
        client.send(post_msg.encode('utf-8'))
        response2 = client.recv(1024).decode()
        print(response2)
+    elif response_json['response']['type'] == 'error':
+       print(f"Error from server : {response_json['response']['message']}")
     else:
-       print(response_json['response']['message'])
+       print("Response from server is an unknown error")
     client.close()
     return True
   except Exception as e:
-      print("Error:", e)
-      return False
+    print("Unexpected Error:", e)
+    return False
 def get_timestamp():
    return str(time.time())

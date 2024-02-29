@@ -20,7 +20,8 @@ def create_journal(filepath:str):   #creating the journal and adding the inputs
         print("File exists and will now be opened")
         open_journal(filepath)
     else:
-        file_name = Path(filepath).open('w')
+        if filepath[-4::1] == ".dsu":
+            file_name = Path(filepath).open('w')
     profile = Profile(srv_ip, username, password)
     profile.save_profile(filepath)
     file_name.close()
